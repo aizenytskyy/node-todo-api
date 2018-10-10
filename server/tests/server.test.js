@@ -12,7 +12,9 @@ const todos = [
     },
     {
         _id: new ObjectID(),
-        text: 'Second text todo'
+        text: 'Second text todo',
+        completed: true,
+        completedAt: 444
     }
 ];
 
@@ -144,5 +146,57 @@ describe('DELETE /todo/:id', () => {
             .delete(`/todos/1234`)
             .expect(404)
             .end(done);
+    });
+});
+
+describe('PATCH /todo/:id', () => {
+    it('schould update the todo', done => {
+        var hexId = todos[0]._id.toHexString();
+        var text = 'First text UPDATED';
+        request(app)
+            .patch(`/todos/${hexId}`)
+            .send({ text, completed: true })
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(true);
+                expect(res.body.todo.completedAt).toBeA('number');
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Todo.findById(hexId)
+                    .then(doc => {
+                        expect(doc.text).toBe(text);
+                        done();
+                    })
+                    .catch(e => done(e));
+            });
+    });
+
+    it('schould clear completedAt when todo is not completed', done => {
+        var hexId = todos[1]._id.toHexString();
+        var text = 'Second text UPDATED';
+        request(app)
+            .patch(`/todos/${hexId}`)
+            .send({ text, completed: false })
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(false);
+                expect(res.body.todo.completedAt).toNotExist();
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+                Todo.findById(hexId)
+                    .then(doc => {
+                        expect(doc.text).toBe(text);
+                        done();
+                    })
+                    .catch(e => done(e));
+            });
     });
 });
