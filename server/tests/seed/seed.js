@@ -29,13 +29,15 @@ const users = [
 const todos = [
     {
         _id: new ObjectID(),
-        text: 'First text todo'
+        text: 'First text todo',
+        _creator: userOneId
     },
     {
         _id: new ObjectID(),
         text: 'Second text todo',
         completed: true,
-        completedAt: 444
+        completedAt: 444,
+        _creator: userTwoId
     }
 ];
 
