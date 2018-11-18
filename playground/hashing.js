@@ -5,14 +5,14 @@ const bcrypt = require('bcryptjs');
 var pswd = 'passw0rd';
 
 bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(pswd, salt, (err, hash) => {
-        console.log(hash);
-    });
+  bcrypt.hash(pswd, salt, (err, hash) => {
+    console.log(hash);
+  });
 });
 
 var hashedPswd = '$2a$10$jRLJJdMXSDsKtRYJeV8j1.5h3SECFehD2f5xerjcBR4mmfjBysYNS';
 bcrypt.compare(pswd, hashedPswd, (err, res) => {
-    console.log(res);
+  console.log(res);
 });
 //
 // var data = {
